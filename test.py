@@ -1,37 +1,41 @@
-import tkinter
-import tkinter.ttk as ttk
+from PIL import Image,ImageTk
+from tkinter import *
+from tkinter import filedialog
+from fpdf import FPDF
+root=Tk()
+root.attributes("-fullscreen", False)
+text = Text(root)
+text.pack()
 
-class TextScrollCombo(ttk.Frame):
+#Insert Image
 
-    def __init__(self, *args, **kwargs):
+yourImage=filedialog.askopenfilenames(title = "Select your image",filetypes = [("Image Files","*.png"),("Image Files","*.jpg")])
+#imgFile=Image.open(yourImage)
+for i in yourImage:
+    imgToInsert=ImageTk.PhotoImage(file=i)
+    print(i)
+    text.image_create("insert-1c",image=imgToInsert)
+# save FPDF() class into a
+# variable pdf
+pdf = FPDF()
 
-        super().__init__(*args, **kwargs)
+# Add a page
+pdf.add_page()
 
-    # ensure a consistent GUI size
-        self.grid_propagate(False)
-    # implement stretchability
-        self.grid_rowconfigure(0, weight=1)
-        self.grid_columnconfigure(0, weight=1)
+# set style and size of font
+# that you want in the pdf
+pdf.set_font("Arial", size = 15)
 
-    # create a Text widget
-        self.txt = tkinter.Text(self)
-        self.txt.grid(row=0, column=0, sticky="nsew", padx=2, pady=2)
+# create a cell
+pdf.cell(200, 10, txt = "GeeksforGeeks",
+         ln = 1, align = 'C')
 
-    # create a Scrollbar and associate it with txt
-        scrollb = ttk.Scrollbar(self, command=self.txt.yview)
-        scrollb.grid(row=0, column=1, sticky='nsew')
-        self.txt['yscrollcommand'] = scrollb.set
+# add another cell
+pdf.cell(200, 10, txt = "text",
+         ln = 2, align = 'C')
+for i in yourImage:
+    pdf.image(name=i, x = None, y = None, w = 190, h = 100, type = '', link = '')
 
-main_window = tkinter.Tk()
-
-combo = TextScrollCombo(main_window)
-combo.pack(fill="both", expand=True)
-combo.config(width=600, height=600)
-
-combo.txt.config(font=("consolas", 12), undo=True, wrap='word')
-combo.txt.config(borderwidth=3, relief="sunken")
-
-style = ttk.Style()
-style.theme_use('clam')
-
-main_window.mainloop()
+# save the pdf with name .pdf
+pdf.output("GFG.pdf")
+root.mainloop()

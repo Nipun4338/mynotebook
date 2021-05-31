@@ -13,6 +13,7 @@ def testme():
     recognizer.read('trainer/trainer.yml')
     cascadePath = "Cascades/haarcascade_frontalface_default.xml"
     faceCascade = cv2.CascadeClassifier(cascadePath);
+    print("\n [INFO] Initializing face capture. Look the camera and wait ...")
 
     font = cv2.FONT_HERSHEY_SIMPLEX
 
@@ -54,7 +55,6 @@ def testme():
 
                 if (round(100 - confidence) > 60.0):
                     # Do a bit of cleanup
-                    print(id)
                     print("\n [INFO] Exiting Program and cleanup stuff")
                     cam.release()
                     cv2.destroyAllWindows()
@@ -65,7 +65,7 @@ def testme():
                 id = "unknown"
                 confidence = "  {0}%".format(round(100 - confidence))
 
-            #cv2.putText(img, str(id), (x + 5, y - 5), font, 1, (255, 255, 255), 2)
+            cv2.putText(img, str(round(25-(time.time() - start_time),2))+"s remaining", (x + 5, y - 5), font, 1, (255, 255, 255), 2)
             cv2.putText(img, str(confidence), (x + 5, y + h - 5), font, 1, (255, 255, 0), 1)
 
         cv2.imshow('camera', img)

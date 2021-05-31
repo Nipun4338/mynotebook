@@ -16,7 +16,7 @@ def takesample(ans):
     print("\n [INFO] Initializing face capture. Look the camera and wait ...")
     # Initialize individual sampling face count
     count = 0
-
+    font = cv2.FONT_HERSHEY_SIMPLEX
     while(True):
         ret, img = cam.read()
         img = cv2.flip(img, 1) # flip video image vertically
@@ -26,13 +26,12 @@ def takesample(ans):
         for (x,y,w,h) in faces:
             cv2.rectangle(img, (x,y), (x+w,y+h), (255,0,0), 2)
             count += 1
-            print(count)
 
             # Save the captured image into the datasets folder
+            cv2.putText(img, str(100-count)+" frames remaining", (x + 5, y - 5), font, 1, (255, 255, 255), 2)
             cv2.imwrite("dataset/User." + str(face_id) + '.' + str(count) + ".jpg", gray[y:y+h,x:x+w])
 
-            cv2.imshow('image', img)
-            print("Ok")
+            cv2.imshow('Taking Samples', img)
 
         k = cv2.waitKey(100) & 0xff # Press 'ESC' for exiting video
         if k == 27:

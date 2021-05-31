@@ -20,9 +20,12 @@ def video(Ans):
     if(myresult):
         window1= Tk()
         window1.title('Alert')
-        window1.minsize(800, 400)
-        window1.maxsize(800, 400)
-        Label(window1, text = "You have an active account!",font=('Impact', -20),bg='#456').grid(column= 0, row = 4)
+        window1.minsize(300, 50)
+        window1.maxsize(300, 50)
+        window1.configure(background='#456')
+        Label(window1, text = "You have an active account!",font=('Impact', -20),bg='#456',fg="#df4759").place(relx = 0.5,
+                           rely = 0.5,
+                           anchor = 'center')
     else:
         sql="Insert into profiles(phone) values('"+Ans+"')";
         mycursor1 = mydb.cursor()
@@ -34,15 +37,15 @@ def video(Ans):
 def regme():
     window= Tk()
     window.title('Register')
-    window.minsize(800, 400)
-    window.maxsize(800, 400)
-    Label(window, text = "Enter Your Phone Number for Register:").grid(column= 0, row = 4)
-    num1 = Entry(window)
+    window.minsize(600, 50)
+    window.maxsize(600, 50)
+    Label(window, text = "Enter Only Your Decimal Phone Number for Register:",font=('Impact', -15),borderwidth=1, relief="sunken", fg='#000').grid(column= 0, row = 4, padx = 10, pady = 10)
+    num1 = Entry(window,width=20)
     num1.grid(column= 1, row = 4)
     Ans = str(num1.get())
-    window.video = Button(window, text = "Take video screen",command = lambda:[video(str(num1.get()))])
+    window.video = Button(window, text = "Take video training",font=('Impact', -12),fg='#fff',command = lambda:[video(str(num1.get()))])
     window.video.configure(background='#e28743')
-    window.video.grid(column= 2, row = 13)
+    window.video.grid(column= 2, row = 4)
     #first_face_dataset.takesample(Ans)
 
 

@@ -1,3 +1,5 @@
+import tkinter as tk
+from tkinter import *
 import cv2
 import numpy as np
 from PIL import Image
@@ -34,3 +36,11 @@ def trainingfaces():
 
     # Print the numer of faces trained and end program
     print("\n [INFO] {0} faces trained. Exiting Program".format(len(np.unique(ids))))
+    window1= Tk()
+    window1.title('Alert')
+    window1.minsize(300, 50)
+    window1.maxsize(300, 50)
+    window1.configure(background='#456')
+    Label(window1, text = "Registered!",font=('Impact', -20),bg='#456',fg="#42ba96").place(relx = 0.5,
+                       rely = 0.5,
+                       anchor = 'center')

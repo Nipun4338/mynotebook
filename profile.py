@@ -7,6 +7,7 @@ from fpdf import FPDF
 from PIL import Image,ImageTk
 from tkinter import filedialog
 from tkinter import ttk
+from datetime import datetime
 
 mydb = mysql.connector.connect(
     host="localhost",
@@ -26,9 +27,12 @@ def delete(*values):
     mydb.commit()
     alert=Tk()
     alert.title('Successfull!')
-    alert.minsize(800, 400)
-    alert.maxsize(800, 400)
-    Label(alert, text = "Successfully Deleted!",font=('Impact', -20),bg='#456').grid(column= 0, row = 4)
+    alert.minsize(200, 50)
+    alert.maxsize(200, 50)
+    alert.configure(background='#456')
+    Label(alert, text = "Successfully Deleted!",font=('Impact', -20),bg='#456',fg="#42ba96").place(relx = 0.5,
+                       rely = 0.5,
+                       anchor = 'center')
 
 
 def update(*values):
@@ -39,15 +43,21 @@ def update(*values):
         mydb.commit()
         alert=Tk()
         alert.title('Successfull!')
-        alert.minsize(800, 400)
-        alert.maxsize(800, 400)
-        Label(alert, text = "Successfully Updated!",font=('Impact', -20),bg='#456').grid(column= 0, row = 4)
+        alert.minsize(400, 50)
+        alert.maxsize(400, 50)
+        alert.configure(background='#456')
+        Label(alert, text = "Successfully Updated!",font=('Impact', -20),bg='#456',fg="#42ba96").place(relx = 0.5,
+                           rely = 0.5,
+                           anchor = 'center')
     else:
         alert=Tk()
         alert.title('Alert')
         alert.minsize(800, 400)
         alert.maxsize(800, 400)
-        Label(alert, text = "Nothing to update due to empty!",font=('Impact', -20),bg='#456').grid(column= 0, row = 4)
+        alert.configure(background='#fff')
+        Label(alert, text = "Nothing to update due to empty!",font=('Impact', -20),bg='#fff',fg="#df4759").place(relx = 0.5,
+                           rely = 0.5,
+                           anchor = 'center')
 
 
 def update_text(*values):
@@ -64,7 +74,11 @@ def update_text(*values):
                 e.pack(side=TOP, anchor=NW)
                 e.config(anchor=CENTER)
             if j==2:
-                e = Label(noteedit,width=25, text=student[j].strftime("%c"),
+                date_time=datetime.strptime(str(student[j]), '%Y-%m-%d %H:%M:%S')
+                d = date_time.strftime("%d %B, %Y")
+                d+=", "
+                d+= date_time.strftime("%I:%M:%S %p")
+                e = Label(noteedit,width=30, text=str(d),
                 borderwidth=2,relief='ridge', anchor="w",font=('Impact', -20), bg='#fff', fg='#000')
                 e.pack(side=TOP, anchor=NE)
                 e.config(anchor=CENTER)
@@ -87,7 +101,8 @@ def update_text(*values):
     txt.pack(expand=True, fill='both')
     txt.config(font=("consolas", 12), undo=True, wrap='word')
     txt.config(borderwidth=3, relief="sunken")
-    btn = tkinter.Button(noteedit,width=15, text="Update", command= lambda:[update(txt.get('1.0', 'end-1c'),str(sub.get()),values[2], values[3])],fg="#456")
+    btn = tkinter.Button(noteedit,width=15, text="Update",font=('Impact', -20),fg='#fff', command= lambda:[update(txt.get('1.0', 'end-1c'),str(sub.get()),values[2], values[3])])
+    btn.configure(background='#5bc0de')
     btn.pack()
 
 
@@ -99,15 +114,21 @@ def get_text(*values):
         mydb.commit()
         alert=Tk()
         alert.title('Successfull!')
-        alert.minsize(800, 400)
-        alert.maxsize(800, 400)
-        Label(alert, text = "Successfully Inserted!",font=('Impact', -20),bg='#456').grid(column= 0, row = 4)
+        alert.minsize(400, 50)
+        alert.maxsize(400, 50)
+        alert.configure(background='#456')
+        Label(alert, text = "Note Added!",font=('Impact', -20),bg='#456',fg="#42ba96").place(relx = 0.5,
+                           rely = 0.5,
+                           anchor = 'center')
     else:
         alert=Tk()
         alert.title('Alert')
-        alert.minsize(800, 400)
-        alert.maxsize(800, 400)
-        Label(alert, text = "Nothing to insert due to empty!",font=('Impact', -20),bg='#456').grid(column= 0, row = 4)
+        alert.minsize(400, 50)
+        alert.maxsize(400, 50)
+        alert.configure(background='#fff')
+        Label(alert, text = "Nothing to add due to empty!",bg="#fff",font=('Impact', -20),fg="#df4759").place(relx = 0.5,
+                           rely = 0.5,
+                           anchor = 'center')
 
 def pdf(*values):
     # save FPDF() class into a
@@ -135,6 +156,8 @@ def pdf(*values):
         for images in mycursor4:
             for j in range(len(images)):
                 if j==2:
+                    im = Image.open(images[j])
+                    width, height = im.size
                     pdf.image(name=images[j], x = None, y = None, w = 190, h = 100, type = '', link = '')
 
     # add another cell
@@ -146,9 +169,12 @@ def pdf(*values):
     pdf.output(str(values[2])+"-"+str(values[3])+".pdf")
     alert=Tk()
     alert.title('Successfull!')
-    alert.minsize(800, 400)
-    alert.maxsize(800, 400)
-    Label(alert, text = "Successfully Saved!",font=('Impact', -20),bg='#456').grid(column= 0, row = 4)
+    alert.minsize(200, 50)
+    alert.maxsize(200, 50)
+    alert.configure(background='#456')
+    Label(alert, text = "Successfully Saved!",font=('Impact', -20),bg='#456',fg="#42ba96").place(relx = 0.5,
+                       rely = 0.5,
+                       anchor = 'center')
 
 
 def view_image(*values):
@@ -176,7 +202,11 @@ def view(*values):
                 e.pack(side=TOP, anchor=NW)
                 e.config(anchor=CENTER)
             if j==2:
-                e = Label(noteview,width=25, text=student[j].strftime("%c"),
+                date_time=datetime.strptime(str(student[j]), '%Y-%m-%d %H:%M:%S')
+                d = date_time.strftime("%d %B, %Y")
+                d+=", "
+                d+= date_time.strftime("%I:%M:%S %p")
+                e = Label(noteview,width=30, text=str(d),
                 borderwidth=2,relief='ridge', anchor="w",font=('Impact', -20), bg='#fff', fg='#000')
                 e.pack(side=TOP, anchor=NE)
                 e.config(anchor=CENTER)
@@ -204,9 +234,9 @@ def view(*values):
             for j in range(len(images)):
                 if j==2:
                     counter+=1
-                    txt1.showoriginal = Button(txt1,width=15, text = "View Image "+str(counter),command=lambda images=images: view_image(images[2]))
-                    txt1.showoriginal.configure(background='#e28743')
-                    txt1.showoriginal.pack()
+                    txt1.showoriginal = Button(txt1,width=10, text = "View Image "+str(counter),font=('Impact', -10),fg="#fff",command=lambda images=images: view_image(images[2]))
+                    txt1.showoriginal.configure(background='#f0ad4e')
+                    txt1.showoriginal.pack(side=tkinter.RIGHT)
 
     mycursor.execute(sql)
     for student in mycursor:
@@ -217,9 +247,11 @@ def view(*values):
     txt.config(font=("consolas", 12), undo=True, wrap='word')
     txt.config(borderwidth=3, relief="sunken")
     txt.config(state=DISABLED)
-    btn = tkinter.Button(noteview,width=15, text="Edit", command= lambda:[update_text(txt.get('1.0', 'end-1c'),str(sub.get()),values[0], values[1])],fg="#456")
+    btn = tkinter.Button(noteview,width=15, text="Edit",font=('Impact', -20),fg='#fff', command= lambda:[update_text(txt.get('1.0', 'end-1c'),str(sub.get()),values[0], values[1])])
+    btn.configure(background='#5cb85c')
     btn.pack()
-    btn1 = tkinter.Button(noteview,width=15, text="Save as PDF", command= lambda:[pdf(txt.get('1.0', 'end-1c'),str(sub.get()),values[0], values[1])],fg="#456")
+    btn1 = tkinter.Button(noteview,width=15, text="Save as PDF", font=('Impact', -20),fg='#fff', command= lambda:[pdf(txt.get('1.0', 'end-1c'),str(sub.get()),values[0], values[1])])
+    btn1.configure(background='#0275d8')
     btn1.pack()
 
 def add_images(*values):
@@ -235,11 +267,14 @@ def add_images(*values):
             sql=sql="Insert into images (note_id, path) values('"+str(id)+"','"+str(i)+"')"
             mycursor2.execute(sql)
             mydb.commit()
-            alert=Tk()
-            alert.title('Successfull!')
-            alert.minsize(800, 400)
-            alert.maxsize(800, 400)
-            Label(alert, text = "Image Added!",font=('Impact', -20),bg='#456').grid(column= 0, row = 4)
+        alert=Tk()
+        alert.title('Successfull!')
+        alert.minsize(200, 50)
+        alert.maxsize(200, 50)
+        alert.configure(background='#456')
+        Label(alert, text = "Image Added!",font=('Impact', -20),bg='#456',fg="#42ba96").place(relx = 0.5,
+                           rely = 0.5,
+                           anchor = 'center')
     else:
         yourImage=filedialog.askopenfilenames(title = "Select your image",filetypes = [("Image Files","*.png"),("Image Files","*.jpg")])
         for i in yourImage:
@@ -248,11 +283,14 @@ def add_images(*values):
             sql=sql="Insert into images (note_id, path) values('"+str(id)+"','"+str(i)+"')"
             mycursor2.execute(sql)
             mydb.commit()
-            alert=Tk()
-            alert.title('Successfull!')
-            alert.minsize(800, 400)
-            alert.maxsize(800, 400)
-            Label(alert, text = "Image Added!",font=('Impact', -20),bg='#456').grid(column= 0, row = 4)
+        alert=Tk()
+        alert.title('Successfull!')
+        alert.minsize(200, 50)
+        alert.maxsize(200, 50)
+        alert.configure(background='#456')
+        Label(alert, text = "Image Added!",font=('Impact', -20),bg='#456',fg="#42ba96").place(relx = 0.5,
+                           rely = 0.5,
+                           anchor = 'center')
 
 
 def addnew(*values):
@@ -267,63 +305,81 @@ def addnew(*values):
     txt.pack(expand=True, fill='both')
     txt.config(font=("consolas", 12), undo=True, wrap='word')
     txt.config(borderwidth=3, relief="sunken")
-    btn = tkinter.Button(add,width=15, text="Insert", command= lambda:[get_text(txt.get('1.0', 'end-1c'),str(sub.get()),values[0])],fg="#456")
-    btn.pack()
-    btn1 = tkinter.Button(add,width=15, text="Add Images", command= lambda:[add_images(values[0])],fg="#456")
-    btn1.pack()
+    add.showoriginal = tkinter.Button(add,width=15, text="Insert",font=('Impact', -20),fg='#fff', command= lambda:[get_text(txt.get('1.0', 'end-1c'),str(sub.get()),values[0])])
+    add.showoriginal.configure(background='#5cb85c')
+    add.showoriginal.pack()
+    add.showoriginal1 = tkinter.Button(add,width=15, text="Add Images",font=('Impact', -20),fg='#fff', command= lambda:[add_images(values[0])])
+    add.showoriginal1.configure(background='#0275d8')
+    add.showoriginal1.pack()
 
 
 
 
 def myprofile(id):
-    profile1=Tk()
-    profile1.title('Profile')
-    profile1.minsize(800, 400)
-    profile1.maxsize(800, 400)
-    Label(profile1, text = "Name: "+str(id)).grid(column= 0, row = 1)
+    profile=Tk()
+
+    main_frame=Frame(profile)
+    main_frame.pack(fill=BOTH, expand=1)
+
+    profile2=Canvas(main_frame,width = 920, height = 400)
+    profile2.pack(side=LEFT, fill=BOTH, expand=1)
+
+    sb = ttk.Scrollbar(main_frame, orient=VERTICAL, command=profile2.yview)
+    sb.pack(side = RIGHT, fill = Y)
+    profile2.configure(yscrollcommand = sb.set )
+    profile2.bind('<Configure>', lambda e: profile2.configure(scrollregion = profile2.bbox("all")))
+    profile1=Frame(profile2)
+    profile2.create_window((0,0), window=profile1, anchor='nw')
+
+    Label(profile1, text = "Name: "+str(id), font=('Impact', -15),borderwidth=1, relief="raised", fg='#000').grid(column= 0, row = 1)
     mycursor = mydb.cursor()
-    sql="CREATE TABLE if not exists user"+str(id)+" (id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, subject VARCHAR(255) NULL, note TEXT NULL, date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NULL)"
+    sql="CREATE TABLE if not exists user"+str(id)+" (id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, subject VARCHAR(255) NULL, date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NULL, note TEXT NULL)"
     mycursor.execute(sql)
     sql="SELECT * FROM user"+str(id)+" order by date desc"
     mycursor.execute(sql)
-    profile1.showoriginal = Button(profile1, text = "Add a new note", command=lambda:[addnew(id)])
-    profile1.showoriginal.configure(background='#e28743')
+    profile1.showoriginal = Button(profile1, text = "Add a new note",font=('Impact', -15), fg='#fff', command=lambda:[addnew(id)])
+    profile1.showoriginal.configure(background='#5bc0de')
     profile1.showoriginal.grid(column= 1, row = 1)
-    e=Label(profile1,width=15,text='Id',borderwidth=2, relief='ridge',anchor='w',bg='yellow')
+    e=Label(profile1,width=15,text='Id',borderwidth=3, relief='ridge',anchor='w',bg='yellow',font=('Impact', -15), fg='#000')
     e.config(anchor=CENTER)
     e.grid(row=4,column=0)
-    e=Label(profile1,width=30,text='Subject',borderwidth=2, relief='ridge',anchor='w',bg='yellow')
+    e=Label(profile1,width=50,text='Subject',borderwidth=3, relief='ridge',anchor='w',bg='yellow',font=('Impact', -15), fg='#000')
     e.config(anchor=CENTER)
     e.grid(row=4,column=1)
-    e=Label(profile1,width=20,text='Date',borderwidth=2, relief='ridge',anchor='w',bg='yellow')
+    e=Label(profile1,width=30,text='Date',borderwidth=3, relief='ridge',anchor='w',bg='yellow',font=('Impact', -15), fg='#000')
     e.config(anchor=CENTER)
     e.grid(row=4,column=2)
     i=5
     for student in mycursor:
         for j in range(len(student)):
             if j==0:
-                e = Label(profile1,width=15, text=student[j],
-    	        borderwidth=2,relief='ridge', anchor="w")
+                e = Label(profile1,width=15, text=student[j],fg='#000',
+    	        borderwidth=3,relief='ridge', anchor="w",font=('Impact', -15))
                 e.config(anchor=CENTER)
                 e.grid(row=i, column=j)
             if j==1:
-                e = Label(profile1,width=30, text=student[j],
-    	        borderwidth=2,relief='ridge', anchor="w")
+                e = Label(profile1,width=50, text=student[j],fg='#000',
+    	        borderwidth=3,relief='ridge', anchor="w",font=('Impact', -15))
                 e.config(anchor=CENTER)
                 e.grid(row=i, column=j)
             if j==2:
-                e = Label(profile1,width=20, text=student[j].strftime("%c"),
-    	        borderwidth=2,relief='ridge', anchor="w")
+                date_time=datetime.strptime(str(student[j]), '%Y-%m-%d %H:%M:%S')
+                d = date_time.strftime("%d %B, %Y")
+                d+=", "
+                d+= date_time.strftime("%I:%M:%S %p")
+                e = Label(profile1,width=30, text=str(d),fg='#000',
+    	        borderwidth=3,relief='ridge', anchor="w",font=('Impact', -15))
                 e.config(anchor=CENTER)
                 e.grid(row=i, column=j)
             if j==3:
-                profile1.showoriginal = Button(profile1,width=15, text = "View",command=lambda student=student: view(id,student[0]))
-                profile1.showoriginal.configure(background='#e28743')
+                profile1.showoriginal = Button(profile1,width=15, text = "View",font=('Impact', -15),fg='#fff',command=lambda student=student: view(id,student[0]))
+                profile1.showoriginal.configure(background='#5cb85c')
                 profile1.showoriginal.grid(column= 4, row = i)
-                profile1.showoriginal = Button(profile1,width=15, text = "Delete",command=lambda student=student: delete(id,student[0]))
-                profile1.showoriginal.configure(background='#e28743')
+                profile1.showoriginal = Button(profile1,width=15, text = "Delete",font=('Impact', -15),fg='#fff',command=lambda student=student: delete(id,student[0]))
+                profile1.showoriginal.configure(background='#d9534f')
                 profile1.showoriginal.grid(column= 5, row = i)
         i=i+1
+
 
 
 

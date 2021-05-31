@@ -68,7 +68,7 @@ def testme():
             cv2.putText(img, str(round(25-(time.time() - start_time),2))+"s remaining", (x + 5, y - 5), font, 1, (255, 255, 255), 2)
             cv2.putText(img, str(confidence), (x + 5, y + h - 5), font, 1, (255, 255, 0), 1)
 
-        cv2.imshow('camera', img)
+        cv2.imshow('Testing...', img)
 
         k = cv2.waitKey(10) & 0xff  # Press 'ESC' for exiting video
         if k == 27 or (time.time() - start_time)>=25:
@@ -77,7 +77,10 @@ def testme():
             window3.title('Alert')
             window3.minsize(800, 400)
             window3.maxsize(800, 400)
-            Label(window3, text = "Unable to recognize!",font=('Impact', -20),bg='#456').grid(column= 0, row = 4)
+            window3.configure(background='#456')
+            Label(window3, text = "Unable to recognize!",font=('Impact', -20),bg='#456',fg="#df4759").place(relx = 0.5,
+                               rely = 0.5,
+                               anchor = 'center')
             break
 
     # Do a bit of cleanup

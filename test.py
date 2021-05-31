@@ -3,45 +3,15 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import filedialog
 from fpdf import FPDF
-root=Tk()
-root.attributes("-fullscreen", False)
-text = Text(root)
-text.pack()
+from datetime import datetime
+timestamp = "2021-05-01 21:21:58"
+date_time=datetime.strptime(timestamp, '%Y-%m-%d %H:%M:%S')
+print(date_time)
 
-#Insert Image
+print("Date time object:", date_time)
 
-yourImage=filedialog.askopenfilenames(title = "Select your image",filetypes = [("Image Files","*.png"),("Image Files","*.jpg")])
-#imgFile=Image.open(yourImage)
-for i in yourImage:
-    imgToInsert=ImageTk.PhotoImage(file=i)
-    image_label = ttk.Label(
-        text,
-        image=imgToInsert,
-        text='Python',
-        compound='top'
-    )
-    image_label.pack()
-# save FPDF() class into a
-# variable pdf
-pdf = FPDF()
+d = date_time.strftime("%d %B, %Y")
+print("Output 2:", d)
 
-# Add a page
-pdf.add_page()
-
-# set style and size of font
-# that you want in the pdf
-pdf.set_font("Arial", size = 15)
-
-# create a cell
-pdf.cell(200, 10, txt = "GeeksforGeeks",
-         ln = 1, align = 'C')
-
-# add another cell
-pdf.cell(200, 10, txt = "text",
-         ln = 2, align = 'C')
-for i in yourImage:
-    pdf.image(name=i, x = None, y = None, w = 190, h = 100, type = '', link = '')
-
-# save the pdf with name .pdf
-pdf.output("GFG.pdf")
-root.mainloop()
+d = date_time.strftime("%I:%M:%S %p")
+print("Output 5:", d)

@@ -17,10 +17,12 @@ print(cwd)
 os.chdir(dir_path)
 main.bold_font = Font(family="Helvetica", size=14, weight="bold")
 main.title("My Notebook")
-main.minsize(800, 400)
-main.maxsize(800, 400)
-main.labelFrame = Label(main, text = "Open File:", font=('Impact', -20), bg='#000', fg='#000')
-main.labelFrame.grid(column = 0, row = 2, padx = 20, pady = 20)
+main.minsize(400, 200)
+main.maxsize(400, 200)
+main.labelFrame = Label(main, text = "Welcome to Notebook", font=('Impact', -20), bg='#000', fg='#000')
+main.labelFrame.place(relx = 0.5,
+                   rely = 0.2,
+                   anchor = 'center')
 main.configure(background='#dfdddd')
 main.labelFrame.configure(background='#dfdddd')
 
@@ -34,13 +36,17 @@ def signinme():
 
 def register():
         main.showoriginal = Button(main, text = "Register",command = registerme)
-        main.showoriginal.configure(background='#e28743')
-        main.showoriginal.grid(column= 0, row = 3)
+        main.showoriginal.configure(background='#df4759',font=('Impact', -20),fg='#fff')
+        main.showoriginal.place(relx = 0.37,
+                           rely = 0.5,
+                           anchor = 'center')
 
 def signin():
-        main.showoriginal = Button(main, text = "Signin",command = signinme)
-        main.showoriginal.configure(background='#e28743')
-        main.showoriginal.grid(column= 1, row = 3)
+        main.showoriginal = Button(main, text = "Sign-in",command = signinme)
+        main.showoriginal.configure(background='#42ba96',font=('Impact', -20),fg='#fff')
+        main.showoriginal.place(relx = 0.63,
+                           rely = 0.5,
+                           anchor = 'center')
 
 register()
 signin()

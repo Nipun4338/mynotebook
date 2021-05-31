@@ -4,6 +4,9 @@ import first_face_dataset, registeruser, second_face_training
 import mysql.connector
 import tkinter.scrolledtext as scrolledtext
 from fpdf import FPDF
+from PIL import Image,ImageTk
+from tkinter import filedialog
+from tkinter import ttk
 
 mydb = mysql.connector.connect(
     host="localhost",
@@ -15,6 +18,10 @@ mydb = mysql.connector.connect(
 def delete(*values):
     mycursor = mydb.cursor()
     sql="Delete from user"+str(values[0])+" where id='"+str(values[1])+"'"
+    mycursor.execute(sql)
+    mydb.commit()
+    mycursor = mydb.cursor()
+    sql="Delete from images where note_id='"+str(values[1])+"'"
     mycursor.execute(sql)
     mydb.commit()
     alert=Tk()
@@ -112,15 +119,28 @@ def pdf(*values):
 
     # set style and size of font
     # that you want in the pdf
-    pdf.set_font("Arial", size = 15)
+    pdf.set_font("Arial", style='B', size = 15)
 
     # create a cell
     pdf.cell(200, 10, txt = values[1],
              ln = 1, align = 'C')
 
+    pdf.set_font("Helvetica", size = 15)
+    #add images
+    mycursor4 = mydb.cursor()
+    sql4="SELECT * FROM images where note_id="+str(values[3])
+    mycursor4.execute(sql4)
+
+    if mycursor4:
+        for images in mycursor4:
+            for j in range(len(images)):
+                if j==2:
+                    pdf.image(name=images[j], x = None, y = None, w = 190, h = 100, type = '', link = '')
+
     # add another cell
     pdf.cell(200, 10, txt = values[0],
              ln = 2, align = 'C')
+
 
     # save the pdf with name .pdf
     pdf.output(str(values[2])+"-"+str(values[3])+".pdf")
@@ -130,8 +150,20 @@ def pdf(*values):
     alert.maxsize(800, 400)
     Label(alert, text = "Successfully Saved!",font=('Impact', -20),bg='#456').grid(column= 0, row = 4)
 
+
+def view_image(*values):
+    novi = Toplevel()
+    canvas = Canvas(novi, width = 600, height = 600)
+    canvas.pack(expand = YES, fill = BOTH)
+    gif1 = ImageTk.PhotoImage(file = values[0])
+                                #image not visual
+    canvas.create_image(0, 0, image = gif1, anchor = NW)
+    #assigned the gif1 to the canvas object
+    canvas.gif1 = gif1
+
+
 def view(*values):
-    noteview=Tk()
+    noteview=Toplevel()
     noteview.title('Notes')
     mycursor = mydb.cursor()
     sql="SELECT * FROM user"+str(values[0])+" where id="+str(values[1])
@@ -158,14 +190,30 @@ def view(*values):
     sub.pack(side=TOP, anchor=NW)
     sub.config(state=DISABLED)
 
+    mycursor4 = mydb.cursor()
+    sql4="SELECT * FROM images where note_id="+str(values[1])
+    mycursor4.execute(sql4)
+
     txt = scrolledtext.ScrolledText(noteview, undo=True)
     txt['font'] = ('consolas', '12')
+    txt.pack(expand=True, fill='both')
+    txt1=noteview
+    counter=0
+    if mycursor4:
+        for images in mycursor4:
+            for j in range(len(images)):
+                if j==2:
+                    counter+=1
+                    txt1.showoriginal = Button(txt1,width=15, text = "View Image "+str(counter),command=lambda images=images: view_image(images[2]))
+                    txt1.showoriginal.configure(background='#e28743')
+                    txt1.showoriginal.pack()
+
     mycursor.execute(sql)
     for student in mycursor:
         for j in range(len(student)):
             if j==3:
                 txt.insert(tkinter.INSERT,student[j])
-    txt.pack(expand=True, fill='both')
+
     txt.config(font=("consolas", 12), undo=True, wrap='word')
     txt.config(borderwidth=3, relief="sunken")
     txt.config(state=DISABLED)
@@ -174,6 +222,37 @@ def view(*values):
     btn1 = tkinter.Button(noteview,width=15, text="Save as PDF", command= lambda:[pdf(txt.get('1.0', 'end-1c'),str(sub.get()),values[0], values[1])],fg="#456")
     btn1.pack()
 
+def add_images(*values):
+    mycursor1 = mydb.cursor()
+    sql="SELECT * FROM user"+str(values[0])+" order by date desc limit 0,1"
+    mycursor1.execute(sql)
+    myresult = mycursor1.fetchone()
+    if myresult:
+        yourImage=filedialog.askopenfilenames(title = "Select your image",filetypes = [("Image Files","*.png"),("Image Files","*.jpg")])
+        for i in yourImage:
+            mycursor2 = mydb.cursor()
+            id=myresult[0]+1
+            sql=sql="Insert into images (note_id, path) values('"+str(id)+"','"+str(i)+"')"
+            mycursor2.execute(sql)
+            mydb.commit()
+            alert=Tk()
+            alert.title('Successfull!')
+            alert.minsize(800, 400)
+            alert.maxsize(800, 400)
+            Label(alert, text = "Image Added!",font=('Impact', -20),bg='#456').grid(column= 0, row = 4)
+    else:
+        yourImage=filedialog.askopenfilenames(title = "Select your image",filetypes = [("Image Files","*.png"),("Image Files","*.jpg")])
+        for i in yourImage:
+            mycursor2 = mydb.cursor()
+            id=1
+            sql=sql="Insert into images (note_id, path) values('"+str(id)+"','"+str(i)+"')"
+            mycursor2.execute(sql)
+            mydb.commit()
+            alert=Tk()
+            alert.title('Successfull!')
+            alert.minsize(800, 400)
+            alert.maxsize(800, 400)
+            Label(alert, text = "Image Added!",font=('Impact', -20),bg='#456').grid(column= 0, row = 4)
 
 
 def addnew(*values):
@@ -190,6 +269,10 @@ def addnew(*values):
     txt.config(borderwidth=3, relief="sunken")
     btn = tkinter.Button(add,width=15, text="Insert", command= lambda:[get_text(txt.get('1.0', 'end-1c'),str(sub.get()),values[0])],fg="#456")
     btn.pack()
+    btn1 = tkinter.Button(add,width=15, text="Add Images", command= lambda:[add_images(values[0])],fg="#456")
+    btn1.pack()
+
+
 
 
 def myprofile(id):

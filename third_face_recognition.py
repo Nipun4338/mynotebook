@@ -53,7 +53,7 @@ def testme():
             if (confidence < 100):
                 id = id
 
-                if (round(100 - confidence) > 60.0):
+                if (round(100 - confidence) > 50.0):
                     # Do a bit of cleanup
                     print("\n [INFO] Exiting Program and cleanup stuff")
                     cam.release()

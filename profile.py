@@ -9,6 +9,7 @@ from tkinter import filedialog
 from tkinter import ttk
 from datetime import datetime
 
+#connector
 mydb = mysql.connector.connect(
     host="localhost",
     user="root",
@@ -16,6 +17,7 @@ mydb = mysql.connector.connect(
     db="mynotebook"
 )
 
+#delete note
 def delete(*values):
     mycursor = mydb.cursor()
     sql="Delete from user"+str(values[0])+" where id='"+str(values[1])+"'"
@@ -35,6 +37,7 @@ def delete(*values):
                        anchor = 'center')
 
 
+#update note
 def update(*values):
     if len(values[0])>0 and len(values[1])>0:
         mycursor = mydb.cursor()
@@ -60,6 +63,7 @@ def update(*values):
                            anchor = 'center')
 
 
+#update note function call
 def update_text(*values):
     noteedit=Tk()
     noteedit.title('Edit Notes')
@@ -106,6 +110,7 @@ def update_text(*values):
     btn.pack()
 
 
+#get text for inserting note
 def get_text(*values):
     if len(values[0])>0 and len(values[1])>0:
         mycursor = mydb.cursor()
@@ -130,6 +135,7 @@ def get_text(*values):
                            rely = 0.5,
                            anchor = 'center')
 
+#save as pdf
 def pdf(*values):
     # save FPDF() class into a
     # variable pdf
@@ -177,6 +183,7 @@ def pdf(*values):
                        anchor = 'center')
 
 
+#view separate note images
 def view_image(*values):
     novi = Toplevel()
     canvas = Canvas(novi, width = 600, height = 600)
@@ -188,6 +195,7 @@ def view_image(*values):
     canvas.gif1 = gif1
 
 
+#view note
 def view(*values):
     noteview=Toplevel()
     noteview.title('Notes')
@@ -254,6 +262,7 @@ def view(*values):
     btn1.configure(background='#0275d8')
     btn1.pack()
 
+#inserting images
 def add_images(*values):
     mycursor1 = mydb.cursor()
     sql="SELECT * FROM user"+str(values[0])+" order by date desc limit 0,1"
@@ -293,6 +302,7 @@ def add_images(*values):
                            anchor = 'center')
 
 
+#add new note
 def addnew(*values):
     add=Tk()
     add.title('Add a new note')
@@ -314,9 +324,10 @@ def addnew(*values):
 
 
 
-
+#profile function
 def myprofile(id):
     profile=Tk()
+    profile.title("Profile")
 
     main_frame=Frame(profile)
     main_frame.pack(fill=BOTH, expand=1)
@@ -331,6 +342,7 @@ def myprofile(id):
     profile1=Frame(profile2)
     profile2.create_window((0,0), window=profile1, anchor='nw')
 
+
     Label(profile1, text = "Name: "+str(id), font=('Impact', -15),borderwidth=1, relief="raised", fg='#000').grid(column= 0, row = 1)
     mycursor = mydb.cursor()
     sql="CREATE TABLE if not exists user"+str(id)+" (id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, subject VARCHAR(255) NULL, date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NULL, note TEXT NULL)"
@@ -340,6 +352,9 @@ def myprofile(id):
     profile1.showoriginal = Button(profile1, text = "Add a new note",font=('Impact', -15), fg='#fff', command=lambda:[addnew(id)])
     profile1.showoriginal.configure(background='#5bc0de')
     profile1.showoriginal.grid(column= 1, row = 1)
+    profile1.showoriginal = Button(profile1, text = "Refresh",font=('Impact', -15), fg='#fff', command=lambda:[myprofile(id)])
+    profile1.showoriginal.configure(background='#ffff00')
+    profile1.showoriginal.grid(column= 2, row = 1)
     e=Label(profile1,width=15,text='Id',borderwidth=3, relief='ridge',anchor='w',bg='yellow',font=('Impact', -15), fg='#000')
     e.config(anchor=CENTER)
     e.grid(row=4,column=0)
@@ -372,10 +387,10 @@ def myprofile(id):
                 e.config(anchor=CENTER)
                 e.grid(row=i, column=j)
             if j==3:
-                profile1.showoriginal = Button(profile1,width=15, text = "View",font=('Impact', -15),fg='#fff',command=lambda student=student: view(id,student[0]))
+                profile1.showoriginal = Button(profile1,width=15, text = "View",font=('Impact', -15),fg='#fff',command=lambda student=student: view(id,student[0]),cursor="mouse")
                 profile1.showoriginal.configure(background='#5cb85c')
                 profile1.showoriginal.grid(column= 4, row = i)
-                profile1.showoriginal = Button(profile1,width=15, text = "Delete",font=('Impact', -15),fg='#fff',command=lambda student=student: delete(id,student[0]))
+                profile1.showoriginal = Button(profile1,width=15, text = "Delete",font=('Impact', -15),fg='#fff',command=lambda student=student: delete(id,student[0]),cursor="pirate")
                 profile1.showoriginal.configure(background='#d9534f')
                 profile1.showoriginal.grid(column= 5, row = i)
         i=i+1

@@ -197,7 +197,7 @@ def view_image(*values):
 
 #view note
 def view(*values):
-    noteview=Toplevel()
+    noteview=Tk()
     noteview.title('Notes')
     mycursor = mydb.cursor()
     sql="SELECT * FROM user"+str(values[0])+" where id="+str(values[1])
@@ -358,12 +358,10 @@ def myprofile(id):
     profile1.showoriginal.grid(column= 1, row = 1)
     profile1.showoriginal = Button(profile1, text = "Refresh",font=('Impact', -15), fg='#fff', command=lambda:[myprofile(id)])
     profile1.showoriginal.configure(background='#ffff00')
-    profile1.showoriginal.grid(column= 2, row = 1)
+    profile1.showoriginal.grid(column= 3, row = 1)
     profile1.showoriginal = Button(profile1, text = "Gallery",font=('Impact', -15), fg='#fff', command=lambda:[gallerygo(id)])
     profile1.showoriginal.configure(background='#16ca60')
-    profile1.showoriginal.place(relx = 0.5,
-                       rely = 0.1,
-                       anchor = 'center')
+    profile1.showoriginal.grid(column= 2, row = 1)
     e=Label(profile1,width=15,text='Id',borderwidth=3, relief='ridge',anchor='w',bg='yellow',font=('Impact', -15), fg='#000')
     e.config(anchor=CENTER)
     e.grid(row=4,column=0)
@@ -398,10 +396,10 @@ def myprofile(id):
             if j==3:
                 profile1.showoriginal = Button(profile1,width=15, text = "View",font=('Impact', -15),fg='#fff',command=lambda student=student: view(id,student[0]),cursor="mouse")
                 profile1.showoriginal.configure(background='#5cb85c')
-                profile1.showoriginal.grid(column= 4, row = i)
+                profile1.showoriginal.grid(column= 3, row = i)
                 profile1.showoriginal = Button(profile1,width=15, text = "Delete",font=('Impact', -15),fg='#fff',command=lambda student=student: delete(id,student[0]),cursor="pirate")
                 profile1.showoriginal.configure(background='#d9534f')
-                profile1.showoriginal.grid(column= 5, row = i)
+                profile1.showoriginal.grid(column= 4, row = i)
         i=i+1
 
 

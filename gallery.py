@@ -46,10 +46,8 @@ def galleryview(id):
     gallery1=Frame(gallery2)
     gallery2.create_window((0,0), window=gallery1, anchor='nw')
 
-    Label(gallery1, text = "Name: "+str(id), font=('Impact', -15),borderwidth=1, relief="raised", fg='#000').grid(column= 0, row = 1)
-    Label(gallery1, text = "Images", font=('Impact', -15),borderwidth=1, relief="raised", fg='#000').place(relx = 0.5,
-                       rely = 0.1,
-                       anchor = 'center')
+    Label(gallery1, text = "Your Images", font=('Impact', -15),borderwidth=1, relief="raised", fg='#000').grid(column= 0, row = 1)
+
     mycursor = mydb.cursor()
     sql="SELECT * FROM images where user_id='"+str(id)+"'"
     mycursor.execute(sql)

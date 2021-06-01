@@ -1,6 +1,6 @@
 from tkinter import *
 import tkinter
-import first_face_dataset, registeruser, second_face_training
+import first_face_dataset, registeruser, second_face_training, gallery
 import mysql.connector
 import tkinter.scrolledtext as scrolledtext
 from fpdf import FPDF
@@ -87,13 +87,13 @@ def update_text(*values):
                 e.pack(side=TOP, anchor=NE)
                 e.config(anchor=CENTER)
 
-    sub = Entry(noteedit,font='Arial 18', fg='Grey', width=50)
+    sub = Entry(noteedit,font = ('courier', 15, 'bold'), width=50,foreground = 'green',borderwidth=15, relief=tkinter.SUNKEN)
     mycursor.execute(sql)
     for student in mycursor:
         for j in range(len(student)):
             if j==1:
                 sub.insert(tkinter.INSERT,student[j])
-    sub.pack(side=TOP, anchor=NW)
+    sub.pack(side=TOP, anchor=NW,expand=True, fill='both')
 
     txt = scrolledtext.ScrolledText(noteedit, undo=True)
     txt['font'] = ('consolas', '12')
@@ -155,7 +155,7 @@ def pdf(*values):
     pdf.set_font("Helvetica", size = 15)
     #add images
     mycursor4 = mydb.cursor()
-    sql4="SELECT * FROM images where note_id="+str(values[3])
+    sql4="SELECT * FROM images where note_id='"+str(values[3])+"' and user_id='"+str(values[2])+"'"
     mycursor4.execute(sql4)
 
     if mycursor4:
@@ -219,17 +219,17 @@ def view(*values):
                 e.pack(side=TOP, anchor=NE)
                 e.config(anchor=CENTER)
 
-    sub = Entry(noteview,font='Arial 18', fg='Grey', width=50)
+    sub = Entry(noteview,font = ('courier', 15, 'bold'), width=50,foreground = 'green',borderwidth=15, relief=tkinter.SUNKEN)
     mycursor.execute(sql)
     for student in mycursor:
         for j in range(len(student)):
             if j==1:
                 sub.insert(tkinter.INSERT,student[j])
-    sub.pack(side=TOP, anchor=NW)
+    sub.pack(side=TOP, anchor=NW,expand=True, fill='both')
     sub.config(state=DISABLED)
 
     mycursor4 = mydb.cursor()
-    sql4="SELECT * FROM images where note_id="+str(values[1])
+    sql4="SELECT * FROM images where note_id='"+str(values[1])+"' and user_id='"+str(values[0])+"'"
     mycursor4.execute(sql4)
 
     txt = scrolledtext.ScrolledText(noteview, undo=True)
@@ -253,7 +253,7 @@ def view(*values):
                 txt.insert(tkinter.INSERT,student[j])
 
     txt.config(font=("consolas", 12), undo=True, wrap='word')
-    txt.config(borderwidth=3, relief="sunken")
+    txt.config(borderwidth=5, relief="sunken")
     txt.config(state=DISABLED)
     btn = tkinter.Button(noteview,width=15, text="Edit",font=('Impact', -20),fg='#fff', command= lambda:[update_text(txt.get('1.0', 'end-1c'),str(sub.get()),values[0], values[1])])
     btn.configure(background='#5cb85c')
@@ -273,7 +273,7 @@ def add_images(*values):
         for i in yourImage:
             mycursor2 = mydb.cursor()
             id=myresult[0]+1
-            sql=sql="Insert into images (note_id, path) values('"+str(id)+"','"+str(i)+"')"
+            sql=sql="Insert into images (note_id, path, user_id) values('"+str(id)+"','"+str(i)+"','"+str(values[0])+"')"
             mycursor2.execute(sql)
             mydb.commit()
         alert=Tk()
@@ -306,15 +306,15 @@ def add_images(*values):
 def addnew(*values):
     add=Tk()
     add.title('Add a new note')
-    sub = Entry(add,font='Arial 18', fg='Grey', width=50)
+    sub = Entry(add,font = ('courier', 15, 'bold'), width=50,foreground = 'green',borderwidth=15, relief=tkinter.SUNKEN)
     sub.insert(0, "Subject:")
-    sub.pack(side=TOP, anchor=NW)
+    sub.pack(side=TOP, anchor=NW,expand=True, fill='both')
 
     txt = scrolledtext.ScrolledText(add, undo=True)
     txt['font'] = ('consolas', '12')
     txt.pack(expand=True, fill='both')
     txt.config(font=("consolas", 12), undo=True, wrap='word')
-    txt.config(borderwidth=3, relief="sunken")
+    txt.config(borderwidth=5, relief="sunken")
     add.showoriginal = tkinter.Button(add,width=15, text="Insert",font=('Impact', -20),fg='#fff', command= lambda:[get_text(txt.get('1.0', 'end-1c'),str(sub.get()),values[0])])
     add.showoriginal.configure(background='#5cb85c')
     add.showoriginal.pack()
@@ -322,6 +322,10 @@ def addnew(*values):
     add.showoriginal1.configure(background='#0275d8')
     add.showoriginal1.pack()
 
+
+#Gallery
+def gallerygo(values):
+    gallery.galleryview(values)
 
 
 #profile function
@@ -355,6 +359,11 @@ def myprofile(id):
     profile1.showoriginal = Button(profile1, text = "Refresh",font=('Impact', -15), fg='#fff', command=lambda:[myprofile(id)])
     profile1.showoriginal.configure(background='#ffff00')
     profile1.showoriginal.grid(column= 2, row = 1)
+    profile1.showoriginal = Button(profile1, text = "Gallery",font=('Impact', -15), fg='#fff', command=lambda:[gallerygo(id)])
+    profile1.showoriginal.configure(background='#16ca60')
+    profile1.showoriginal.place(relx = 0.5,
+                       rely = 0.1,
+                       anchor = 'center')
     e=Label(profile1,width=15,text='Id',borderwidth=3, relief='ridge',anchor='w',bg='yellow',font=('Impact', -15), fg='#000')
     e.config(anchor=CENTER)
     e.grid(row=4,column=0)
@@ -368,12 +377,12 @@ def myprofile(id):
     for student in mycursor:
         for j in range(len(student)):
             if j==0:
-                e = Label(profile1,width=15, text=student[j],fg='#000',
+                e = Label(profile1,width=15, text=student[j],fg='#000',bg='#fff',
     	        borderwidth=3,relief='ridge', anchor="w",font=('Impact', -15))
                 e.config(anchor=CENTER)
                 e.grid(row=i, column=j)
             if j==1:
-                e = Label(profile1,width=50, text=student[j],fg='#000',
+                e = Label(profile1,width=50, text=student[j],fg='#000',bg='#fff',
     	        borderwidth=3,relief='ridge', anchor="w",font=('Impact', -15))
                 e.config(anchor=CENTER)
                 e.grid(row=i, column=j)
@@ -382,7 +391,7 @@ def myprofile(id):
                 d = date_time.strftime("%d %B, %Y")
                 d+=", "
                 d+= date_time.strftime("%I:%M:%S %p")
-                e = Label(profile1,width=30, text=str(d),fg='#000',
+                e = Label(profile1,width=30, text=str(d),fg='#000',bg='#fff',
     	        borderwidth=3,relief='ridge', anchor="w",font=('Impact', -15))
                 e.config(anchor=CENTER)
                 e.grid(row=i, column=j)
